@@ -7,20 +7,29 @@
     >
     	
 <TextView 
-	android:text="@string/imok_text" 
+	android:text="@string/userkey_text" 
+	android:id="@+id/userkey_text"
 	android:layout_width="wrap_content" 
 	android:layout_height="wrap_content"
 	android:layout_marginTop="30dip"
 	android:layout_marginBottom="10dip" 
 	/>
 	
-<Button 
-	android:text="@string/imok_button" 
-	android:id="@+id/imok_button" 
+<EditText
+	android:text="@string/userkey_edittext"
+	android:id="@+id/userkey_edittext" 
 	android:layout_width="fill_parent" 
 	android:layout_height="wrap_content"
 	android:padding="25dip"
 	android:layout_marginBottom="10dip" 
 	/>
 
+<Button 
+	android:text="@string/userkey_button" 
+	android:id="@+id/userkey_button" 
+	android:layout_width="fill_parent" 
+	android:layout_height="wrap_content"
+	android:padding="25dip"
+	android:layout_marginBottom="10dip" 
+	/>
 </LinearLayout>

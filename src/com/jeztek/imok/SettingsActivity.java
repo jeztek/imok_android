@@ -14,8 +14,7 @@ import android.preference.Preference.OnPreferenceClickListener;
 public class SettingsActivity extends PreferenceActivity implements
 		OnPreferenceChangeListener, OnPreferenceClickListener {
 
-	private EditTextPreference mFirstNamePref;
-	private EditTextPreference mLastNamePref;
+	private EditTextPreference mUserKeyPref;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -26,8 +25,7 @@ public class SettingsActivity extends PreferenceActivity implements
 
 	private PreferenceScreen createSettingsHierarchy() {
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-		String firstName = settings.getString(Settings.FIRST_NAME, "Tom");
-		String lastName = settings.getString(Settings.LAST_NAME, "Jones");
+		String userKey = settings.getString(Settings.USER_KEY, "0");
 
 		// Root
 		PreferenceScreen root = getPreferenceManager().createPreferenceScreen(this);
@@ -37,23 +35,14 @@ public class SettingsActivity extends PreferenceActivity implements
         userCategory.setTitle(R.string.settings_category_user);
         root.addPreference(userCategory);
 
-        // First name
-        mFirstNamePref = new EditTextPreference(this);
-        mFirstNamePref.setKey(Settings.FIRST_NAME);
-        mFirstNamePref.setDialogTitle(R.string.settings_user_firstname_title);
-        mFirstNamePref.setTitle(R.string.settings_user_firstname_title);
-        mFirstNamePref.setSummary(firstName);
-        mFirstNamePref.setOnPreferenceChangeListener(this);
-        userCategory.addPreference(mFirstNamePref);
-
-        // Last name
-        mLastNamePref = new EditTextPreference(this);
-        mLastNamePref.setKey(Settings.LAST_NAME);
-        mLastNamePref.setDialogTitle(R.string.settings_user_lastname_title);
-        mLastNamePref.setTitle(R.string.settings_user_lastname_title);
-        mLastNamePref.setSummary(lastName);
-        mLastNamePref.setOnPreferenceChangeListener(this);
-        userCategory.addPreference(mLastNamePref);
+        // User key
+        mUserKeyPref = new EditTextPreference(this);
+        mUserKeyPref.setKey(Settings.USER_KEY);
+        mUserKeyPref.setDialogTitle(R.string.settings_user_key_title);
+        mUserKeyPref.setTitle(R.string.settings_user_key_title);
+        mUserKeyPref.setSummary(userKey);
+        mUserKeyPref.setOnPreferenceChangeListener(this);
+        userCategory.addPreference(mUserKeyPref);
 
         // Reset settings
         Preference resetPref = new Preference(this);
@@ -72,14 +61,11 @@ public class SettingsActivity extends PreferenceActivity implements
 	public boolean onPreferenceClick(Preference preference) {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = settings.edit();
-        editor.putString(Settings.FIRST_NAME, "Tom");
-        editor.putString(Settings.LAST_NAME, "Jones");
+        editor.putString(Settings.USER_KEY, "0");
         editor.commit();            
 
-        mFirstNamePref.setSummary("Tom");
-        mLastNamePref.setSummary("Jones");
+        mUserKeyPref.setSummary("0");
         
 		return true;
 	}
-
 }

@@ -34,25 +34,14 @@ public class IMOkActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        loadSettings();
-        
+        loadSettings();        
         setContentView(R.layout.main);
     
-        Button emergencyButton = (Button) findViewById(R.id.main_btn_911);
-        emergencyButton.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				Toast.makeText(getApplication(), R.string.main_toast_calling, Toast.LENGTH_LONG).show();			
-				// In reality we would actually call 911....
-			}
-		});
-        
-        Button reportButton = (Button) findViewById(R.id.main_btn_report);
-        reportButton.setOnClickListener(new View.OnClickListener() {
+        Button imokButton = (Button)findViewById(R.id.imok_button);
+        imokButton.setOnClickListener(new View.OnClickListener() {
+        	@Override
         	public void onClick(View v) {
-        		SharedPreferences s = getApplication().getSharedPreferences(Settings.SETTINGS_FILE, Context.MODE_PRIVATE);
-        		
-        		Intent i = new Intent(getApplication(), ReportActivity.class);
-        		startActivity(i);
+        		reportImok();
         	}
         });
     }
@@ -60,12 +49,14 @@ public class IMOkActivity extends Activity {
     @Override
 	public boolean onCreateOptionsMenu(Menu menu) {
     	super.onCreateOptionsMenu(menu);
-    	MenuItem settingsItem = menu.add(0, MENU_SETUP, 0, R.string.main_menu_setup);
+
+    	MenuItem settingsItem = menu.add(0, MENU_SETUP, 0, R.string.imok_menu_setup);
     	settingsItem.setIcon(android.R.drawable.ic_menu_manage);
     	
-    	MenuItem aboutItem = menu.add(1, MENU_ABOUT, 0, R.string.main_menu_about);
+    	MenuItem aboutItem = menu.add(1, MENU_ABOUT, 0, R.string.imok_menu_about);
     	aboutItem.setIcon(android.R.drawable.ic_menu_info_details);
-		return true;
+		
+    	return true;
 	}
 
 	@Override
@@ -85,14 +76,9 @@ public class IMOkActivity extends Activity {
 	private void loadSettings() {
 		// Load default preferences
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-		SharedPreferences.Editor editor = settings.edit();
-		if (!settings.contains(Settings.FIRST_NAME)) {
-			editor.putString(Settings.FIRST_NAME, "Tom");
+		if (!settings.contains(Settings.USER_KEY)) {
+			startActivity(new Intent(getApplication(), UserKeyActivity.class));
 		}			
-		if (!settings.contains(Settings.LAST_NAME)) {			
-			editor.putString(Settings.LAST_NAME, "Jones");
-		}
-		editor.commit();
 	}
 
 	@Override
@@ -100,28 +86,31 @@ public class IMOkActivity extends Activity {
 		switch (id) {
 		case MENU_ABOUT:
 			return new AlertDialog.Builder(this)
-			.setTitle("I'm Ok!")
-			.setPositiveButton(R.string.main_about_dialog_ok, new DialogInterface.OnClickListener() {
+			.setTitle(getString(R.string.imok_about_dialog_title))
+			.setPositiveButton(R.string.imok_about_dialog_ok, new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int whichButton) {
 				}
 			})
-			.setMessage("Thanks for trying!")
+			.setMessage(getString(R.string.imok_about_dialog_message))
 			.create();
 		}
 		return null;
 	}
 	
+	private void reportImok() {
+		
+	}
 	
 	public boolean uploadData(Uri uri, long id, Map<String,String> vars) {
         try {
             boolean useSSL = false;
-            if (Settings.SERVERURL.startsWith("https")) {
+            if (Settings.SERVER_URL.startsWith("https")) {
             	useSSL = true;
             }
 
             HttpPost post = new HttpPost();
-            String postUrl = Settings.SERVERURL + "/data/post/";
+            String postUrl = Settings.SERVER_URL + "/data/imok/";
             Log.d(TAG, "Posting to URL " + postUrl);
             int out = post.post(postUrl, useSSL, vars, "", null, null);            
             Log.d(TAG, "POST response: " + (new Integer(out).toString()));

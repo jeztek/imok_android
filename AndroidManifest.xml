@@ -9,15 +9,11 @@
     	android:theme="@android:style/Theme.Light">
     
         <activity android:name=".IMOkActivity"
-                  android:label="@string/main_name">
+                  android:label="@string/imok_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        
-        <activity android:name=".ReportActivity"
-                  android:label="@string/report_name">
         </activity>
 
         <activity android:name=".SettingsActivity"
