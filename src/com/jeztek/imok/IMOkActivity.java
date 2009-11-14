@@ -5,11 +5,17 @@ import java.io.IOException;
 import java.util.Map;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,10 +28,14 @@ public class IMOkActivity extends Activity {
 	public static final String TAG = "IMOk.IMOkActivity";
 	
 	public static final int MENU_SETUP = 1;
+	public static final int MENU_ABOUT = 2;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        loadSettings();
+        
         setContentView(R.layout.main);
     
         Button emergencyButton = (Button) findViewById(R.id.main_btn_911);
@@ -41,12 +51,6 @@ public class IMOkActivity extends Activity {
         	public void onClick(View v) {
         		SharedPreferences s = getApplication().getSharedPreferences(Settings.SETTINGS_FILE, Context.MODE_PRIVATE);
         		
-        		if (!s.getBoolean(Settings.WIZARD_COMPLETE, false)) {
-        			Intent i = new Intent(getApplication(), WizardActivity.class);
-        			startActivity(i);
-        			return;
-        		}
-        		
         		Intent i = new Intent(getApplication(), ReportActivity.class);
         		startActivity(i);
         	}
@@ -55,22 +59,60 @@ public class IMOkActivity extends Activity {
     
     @Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-    	menu.add(0, MENU_SETUP, 0, R.string.main_menu_setup)
-    		.setIcon(android.R.drawable.ic_menu_manage);
+    	super.onCreateOptionsMenu(menu);
+    	MenuItem settingsItem = menu.add(0, MENU_SETUP, 0, R.string.main_menu_setup);
+    	settingsItem.setIcon(android.R.drawable.ic_menu_manage);
+    	
+    	MenuItem aboutItem = menu.add(1, MENU_ABOUT, 0, R.string.main_menu_about);
+    	aboutItem.setIcon(android.R.drawable.ic_menu_info_details);
 		return true;
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onMenuItemSelected(int featureId, MenuItem item) {
 		switch (item.getItemId()) {
+		case MENU_ABOUT:
+			showDialog(MENU_ABOUT);
+			break;
 		case MENU_SETUP:
-			startActivity(new Intent(this, WizardActivity.class));
-			return true;		
+			startActivity(new Intent(this, SettingsActivity.class));
+			break;
 		}
 		
-		return false;
+		return super.onMenuItemSelected(featureId, item);
 	}
 
+	private void loadSettings() {
+		// Load default preferences
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+		SharedPreferences.Editor editor = settings.edit();
+		if (!settings.contains(Settings.FIRST_NAME)) {
+			editor.putString(Settings.FIRST_NAME, "Tom");
+		}			
+		if (!settings.contains(Settings.LAST_NAME)) {			
+			editor.putString(Settings.LAST_NAME, "Jones");
+		}
+		editor.commit();
+	}
+
+	@Override
+	protected Dialog onCreateDialog(int id) {
+		switch (id) {
+		case MENU_ABOUT:
+			return new AlertDialog.Builder(this)
+			.setTitle("I'm Ok!")
+			.setPositiveButton(R.string.main_about_dialog_ok, new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int whichButton) {
+				}
+			})
+			.setMessage("Thanks for trying!")
+			.create();
+		}
+		return null;
+	}
+	
+	
 	public boolean uploadData(Uri uri, long id, Map<String,String> vars) {
         try {
             boolean useSSL = false;

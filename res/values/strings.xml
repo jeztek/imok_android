@@ -9,6 +9,12 @@
     <string name="main_report">Report Status</string>
     <string name="main_toast_calling">Calling 911...</string>
     <string name="main_menu_setup">Setup</string>
-    
+    <string name="main_menu_about">About</string>
+    <string name="main_about_dialog_ok">Ok</string>
     <string name="report_name">Report Status</string>
+    <string name="settings_name">Settings</string>
+    <string name="settings_category_user">User Settings</string>
+    <string name="settings_user_firstname_title">First Name</string>
+    <string name="settings_user_lastname_title">Last Name</string>
+    <string name="settings_reset_title">Reset</string>
 </resources>

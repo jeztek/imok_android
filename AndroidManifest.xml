@@ -19,6 +19,10 @@
         <activity android:name=".ReportActivity"
                   android:label="@string/report_name">
         </activity>
+
+        <activity android:name=".SettingsActivity"
+                  android:label="@string/settings_name">
+        </activity>
        
     </application>
     <uses-sdk android:minSdkVersion="4" />
