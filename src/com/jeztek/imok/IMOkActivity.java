@@ -39,7 +39,6 @@ public class IMOkActivity extends Activity {
     
         Button imokButton = (Button)findViewById(R.id.imok_button);
         imokButton.setOnClickListener(new View.OnClickListener() {
-        	@Override
         	public void onClick(View v) {
         		reportImok();
         	}
@@ -88,7 +87,6 @@ public class IMOkActivity extends Activity {
 			return new AlertDialog.Builder(this)
 			.setTitle(getString(R.string.imok_about_dialog_title))
 			.setPositiveButton(R.string.imok_about_dialog_ok, new DialogInterface.OnClickListener() {
-				@Override
 				public void onClick(DialogInterface dialog, int whichButton) {
 				}
 			})
@@ -112,7 +110,8 @@ public class IMOkActivity extends Activity {
             HttpPost post = new HttpPost();
             String postUrl = Settings.SERVER_URL + "/data/imok/";
             Log.d(TAG, "Posting to URL " + postUrl);
-            int out = post.post(postUrl, useSSL, vars, "", null, null);            
+            Map<String,String> temp = post.post(postUrl, useSSL, vars, "", null, null);
+            int out = 200;
             Log.d(TAG, "POST response: " + (new Integer(out).toString()));
             
             return (out == 200);

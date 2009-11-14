@@ -11,6 +11,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.GeneralSecurityException;
+import java.util.HashMap;
 import java.util.Map;
 import javax.net.ssl.HttpsURLConnection;
 import android.util.Log;
@@ -162,7 +163,7 @@ public class HttpPost {
         out.writeBytes(CRLF);
     }
     
-    public int post(String url, boolean useSSL, Map<String,String> vars, String fileKey, String fileName, InputStream istream) throws IOException {
+    public Map<String,String> post(String url, boolean useSSL, Map<String,String> vars, String fileKey, String fileName, InputStream istream) throws IOException {
         HttpURLConnection conn;
         
         try {
@@ -191,11 +192,15 @@ public class HttpPost {
 
             DataOutputStream out = new DataOutputStream(conn.getOutputStream());
             assembleMultipart(out, vars, fileKey, fileName, istream);
-            istream.close();
+            if(istream != null) {
+            	istream.close();
+            }
             out.flush();
             
             InputStream in = conn.getInputStream();
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+            
+            StringBuilder sb = new StringBuilder();
             
             // Set postedSuccess to true if there is a line in the HTTP response in
             // the form "GEOCAM_SHARE_POSTED <file>" where <file> equals fileName.
@@ -203,6 +208,7 @@ public class HttpPost {
             // out that sometimes gives false positives.
             Boolean postedSuccess = false;
             for (String line = reader.readLine(); line != null; line = reader.readLine()) {
+            	sb.append(line);
                 if (!postedSuccess && line.startsWith("GEOCAM_SHARE_POSTED")) {
                     String[] vals = line.trim().split("\\s+");
                     String filePosted = vals[1];
@@ -213,14 +219,12 @@ public class HttpPost {
                 }
             }
             out.close();
+        
+            HashMap<String,String> retVal = new HashMap<String,String>();
+            retVal.put("code", Integer.toString(conn.getResponseCode()));
+            retVal.put("response", sb.toString());
             
-            //return response code;
-            int responseCode = conn.getResponseCode();
-            if (responseCode == 200 && !postedSuccess) {
-                // bogus return code indicates we got value 200 but no confirmation
-                responseCode = 399;
-            }
-            return responseCode;
+            return retVal;
         }
         catch (UnsupportedEncodingException e) {
             throw new IOException("HttpPost - Encoding exception: " + e);
@@ -233,7 +237,9 @@ public class HttpPost {
         
         catch (IOException e) {
             try {
-                return conn.getResponseCode();
+                HashMap<String,String> retVal = new HashMap<String,String>();
+                retVal.put("code", Integer.toString(conn.getResponseCode()));
+                return retVal;
             } catch(IOException f) {
                 throw new IOException("HttpPost - IOException: " + e);
             }
