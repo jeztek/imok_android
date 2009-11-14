@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hello">Hello World, IMOk!</string>
-    <string name="app_name">IMOk</string>
+    <string name="app_name">I'm OK</string>
+
+    <string name="main_name">I'm OK - Emergency Link</string>
+    <string name="main_emergency">In immediate danger</string>
+    <string name="main_911">CALL 911 EMERGENCY</string>
+    <string name="main_non_emergency">Otherwise</string>
+    <string name="main_report">Report Status</string>
+    <string name="main_toast_calling">Calling 911...</string>
+    <string name="main_menu_setup">Setup</string>
+    
+    <string name="report_name">Report Status</string>
 </resources>

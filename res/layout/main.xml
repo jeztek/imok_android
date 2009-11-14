@@ -3,10 +3,40 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:padding="10dip"
     >
+    
 <TextView  
     android:layout_width="fill_parent" 
     android:layout_height="wrap_content" 
-    android:text="@string/hello"
+    android:text="@string/main_emergency"
+    android:layout_marginBottom="10dip"
     />
+    
+<Button 
+	android:text="@string/main_911" 
+	android:id="@+id/main_btn_911" 
+	android:layout_width="fill_parent" 
+	android:layout_height="wrap_content"
+	android:textStyle="bold"
+	android:padding="30dip"
+	/>
+	
+<TextView 
+	android:text="@string/main_non_emergency" 
+	android:layout_width="wrap_content" 
+	android:layout_height="wrap_content"
+	android:layout_marginTop="30dip"
+	android:layout_marginBottom="10dip" 
+	/>
+	
+<Button 
+	android:text="@string/main_report" 
+	android:id="@+id/main_btn_report" 
+	android:layout_width="fill_parent" 
+	android:layout_height="wrap_content"
+	android:padding="25dip"
+	android:layout_marginBottom="10dip" 
+	/>
+
 </LinearLayout>
