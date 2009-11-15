@@ -67,14 +67,6 @@ public class IMOkActivity extends Activity {
         setContentView(R.layout.main);
     
         mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        Criteria criteria = new Criteria();
-        criteria.setAccuracy(Criteria.ACCURACY_FINE);
-        String provider = mLocationManager.getBestProvider(criteria, true);
-        
-        if (provider != null) {
-        	mHaveProvider = true;
-        	mLocationManager.requestLocationUpdates(provider, 1000, 1, mLocationListener);
-        }
         
         Button imokButton = (Button)findViewById(R.id.imok_button);
         imokButton.setOnClickListener(new View.OnClickListener() {
@@ -85,6 +77,27 @@ public class IMOkActivity extends Activity {
     }
     
     @Override
+	protected void onStart() {
+        Criteria criteria = new Criteria();
+        criteria.setAccuracy(Criteria.ACCURACY_FINE);
+        
+        String provider = mLocationManager.getBestProvider(criteria, true);   
+        if (provider != null) {
+        	mHaveProvider = true;
+        	mLocationManager.requestLocationUpdates(provider, 1000, 1, mLocationListener);
+        }
+        
+        super.onStart();
+	}
+
+	@Override
+	protected void onStop() {
+		mLocationManager.removeUpdates(mLocationListener);
+		
+		super.onStop();
+	}
+
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
     	super.onCreateOptionsMenu(menu);
 
