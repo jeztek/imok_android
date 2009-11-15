@@ -16,13 +16,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -68,7 +65,7 @@ public class IMOkActivity extends Activity {
     
         mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         
-        Button imokButton = (Button)findViewById(R.id.imok_button);
+        Button imokButton = (Button) findViewById(R.id.imok_button);
         imokButton.setOnClickListener(new View.OnClickListener() {
         	public void onClick(View v) {
         		reportImok();

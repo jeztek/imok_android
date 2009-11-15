@@ -5,21 +5,17 @@
     android:layout_height="fill_parent"
     android:padding="10dip"
     >
-    	
-<TextView 
-	android:text="@string/imok_text" 
-	android:layout_width="wrap_content" 
-	android:layout_height="wrap_content"
-	android:layout_marginTop="30dip"
-	android:layout_marginBottom="10dip" 
-	/>
-	
+    
 <Button 
-	android:text="@string/imok_button" 
+	android:text="@string/imok_button"
+	android:drawableLeft="@drawable/smiley"
 	android:id="@+id/imok_button" 
 	android:layout_width="fill_parent" 
 	android:layout_height="wrap_content"
+	android:textStyle="bold"
 	android:padding="25dip"
+	android:paddingLeft="0dip"
+	android:paddingRight="50dip"
 	android:layout_marginBottom="10dip" 
 	/>
 
