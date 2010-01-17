@@ -2,11 +2,8 @@ package com.jeztek.imok;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.HashMap;
+import java.text.DecimalFormat;
 import java.util.Map;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -22,7 +19,9 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.preference.PreferenceManager;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,6 +38,12 @@ public class IMOkActivity extends Activity {
 	
 	public static final int DIALOG_ABOUT = 1;
 	public static final int DIALOG_ACQUIRING = 2;
+	
+	private static final int MESSAGE_SHOW_DIALOG = 1;
+	private static final int MESSAGE_HIDE_DIALOG = 2;
+	private static final int MESSAGE_SHOW_TOAST = 3;
+	
+	private static final String MESSAGE_TOAST_TEXT = "toast_text";
 	
 	private Location mLocation = null;
 	
@@ -60,7 +65,6 @@ public class IMOkActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        loadSettings();        
         setContentView(R.layout.main);
     
         mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -99,7 +103,7 @@ public class IMOkActivity extends Activity {
     	super.onCreateOptionsMenu(menu);
 
     	MenuItem settingsItem = menu.add(0, MENU_SETUP, 0, R.string.imok_menu_setup);
-    	settingsItem.setIcon(android.R.drawable.ic_menu_manage);
+    	settingsItem.setIcon(android.R.drawable.ic_menu_preferences);
     	
     	MenuItem aboutItem = menu.add(1, MENU_ABOUT, 0, R.string.imok_menu_about);
     	aboutItem.setIcon(android.R.drawable.ic_menu_info_details);
@@ -121,14 +125,6 @@ public class IMOkActivity extends Activity {
 		return super.onMenuItemSelected(featureId, item);
 	}
 
-	private void loadSettings() {
-		// Load default preferences
-		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-		if (!settings.contains(Settings.USER_KEY)) {
-			startActivity(new Intent(getApplication(), UserKeyActivity.class));
-		}			
-	}
-
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		switch (id) {
@@ -141,6 +137,7 @@ public class IMOkActivity extends Activity {
 			})
 			.setMessage(getString(R.string.imok_about_dialog_message))
 			.create();
+			
 		case DIALOG_ACQUIRING:
 			ProgressDialog progressDialog = new ProgressDialog(this);
 			progressDialog.setCancelable(false);
@@ -152,51 +149,67 @@ public class IMOkActivity extends Activity {
 		return null;
 	}
 	
+	private final Handler.Callback mHandler = new Handler.Callback() {
+		public boolean handleMessage(Message msg) {
+			switch (msg.what) {
+			case MESSAGE_SHOW_DIALOG:
+				showDialog(DIALOG_ACQUIRING);
+				return true;
+
+			case MESSAGE_HIDE_DIALOG:
+				dismissDialog(DIALOG_ACQUIRING);
+				return true;
+				
+			case MESSAGE_SHOW_TOAST:
+				Toast.makeText(IMOkActivity.this, (String) msg.obj, msg.arg1).show();
+				return true;
+			}
+			
+			return false;
+		}
+	};
+	
 	private void reportImok() {
 		final SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-		final Handler handler = new Handler();
+		final Handler handler = new Handler(mHandler);
 		
 		Thread locationThread = new Thread(new Runnable() {
 			public void run() {
-				handler.post(new Runnable() {
-					public void run() {
-						showDialog(DIALOG_ACQUIRING);
-					}
-				});
+				handler.sendEmptyMessage(MESSAGE_SHOW_DIALOG);
 				
 				if (mHaveProvider == true) {
 					while(mLocation == null) { }
 				}
 				
-				HashMap<String,String> location = new HashMap<String,String>();
-				location.put("lat", Double.toString(mLocation.getLatitude()));
-				location.put("lon", Double.toString(mLocation.getLongitude()));
 				
-				String url = Settings.SERVER_URL + Settings.URL_REPORT + settings.getString(Settings.USER_KEY, "") + "/";		
-				Map<String,String> response = uploadData(url, location);
-				
-				if (Integer.parseInt(response.get("code")) != 200) {
-					mToastText = "Error sending status. Pleas try again";
-				} else {
-					try {
-						JSONObject o = new JSONObject(response.get("response"));
-						if (o.getBoolean("result")) {
-							mToastText = "Success. Your twitter status was also updated.";		
-						} else {
-							mToastText = "Success! Status updated.";
-						}
-					} catch (JSONException e) {
-						mToastText = "Error sending status. Pleas try again";	
-					}
+				try {
+					Thread.sleep(2000);
+				} catch(InterruptedException e) {
+					Log.e(TAG, "Hi");
 				}
-
-				handler.post(new Runnable() {
-					public void run() {
-						dismissDialog(DIALOG_ACQUIRING);
-						Toast.makeText(IMOkActivity.this, mToastText, Toast.LENGTH_LONG).show();
-					}
-				});	
 				
+				
+				SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(IMOkActivity.this);
+				String phoneNumber = preferences.getString(
+						Settings.GATEWAY_PHONE, 
+						getText(R.string.settings_gateway_phone_summary).toString());
+			
+				DecimalFormat formatter = new DecimalFormat("###.######");
+				String messageStr = "OK [" +
+					formatter.format(mLocation.getLatitude()) +
+					"," + 
+					formatter.format(mLocation.getLongitude()) + "]";
+			
+				SmsManager manager = SmsManager.getDefault();
+				manager.sendTextMessage(phoneNumber, null, messageStr, null, null);
+				
+				handler.sendEmptyMessage(MESSAGE_HIDE_DIALOG);
+				
+				Message message = new Message();
+				message.arg1 = Toast.LENGTH_LONG;
+				message.what = MESSAGE_SHOW_TOAST;
+				message.obj = (Object) "SMS message sent";
+				handler.sendMessage(message);
 			}
 		});
 		locationThread.start();

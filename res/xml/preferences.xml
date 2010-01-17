@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+  xmlns:android="http://schemas.android.com/apk/res/android">
+  
+  <PreferenceCategory 
+  	android:title="@string/settings_category_gateway">
+  	
+  	<EditTextPreference 
+  		android:name="@string/settings_gateway_phone_name"
+  		android:title="@string/settings_gateway_phone_title"
+  		android:summary="@string/settings_gateway_phone_summary"
+  		android:defaultValue="@string/settings_gateway_phone_summary"
+  		android:key="settings_gateway_phone"
+  		android:phoneNumber="true"
+  	/>
+  	
+  </PreferenceCategory>
+  
+</PreferenceScreen>

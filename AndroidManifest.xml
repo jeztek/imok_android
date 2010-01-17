@@ -10,25 +10,27 @@
     
         <activity android:name=".IMOkActivity"
                   android:label="@string/imok_name">
+                  
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            
         </activity>
 
         <activity android:name=".SettingsActivity"
-                  android:label="@string/settings_name">
-        </activity>
-        
-        <activity android:name=".UserKeyActivity"
-        		  android:label="@string/userkey_name" />
-       
+                  android:label="@string/settings_name" />
+           
     </application>
+    
     <uses-sdk android:minSdkVersion="4" />
 
+	<!-- SMS-related -->
+	<uses-permission android:name="android.permission.RECEIVE_SMS" />
+	<uses-permission android:name="android.permission.READ_SMS" />
+	<uses-permission android:name="android.permission.SEND_SMS" />
 
-	<uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-	<uses-permission android:name="android.permission.INTERNET"/>
+	<!-- GPS-related -->	
 	<uses-permission android:name="android.permission.ACCESS_LOCATION"/>
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 </manifest> 
