@@ -8,10 +8,13 @@ import java.util.Map;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.location.Criteria;
 import android.location.Location;
@@ -32,18 +35,18 @@ import android.widget.Toast;
 public class IMOkActivity extends Activity {
 	
 	public static final String TAG = "IMOk.IMOkActivity";
+	public static final String BROADCAST_SMS = "com.jeztek.imok.SMS_SENT"; 
 	
-	public static final int MENU_SETUP = 1;
-	public static final int MENU_ABOUT = 2;
+	private static final int MENU_SETUP = 1;
+	private static final int MENU_ABOUT = 2;
 	
-	public static final int DIALOG_ABOUT = 1;
-	public static final int DIALOG_ACQUIRING = 2;
+	private static final int DIALOG_ABOUT = 1;
+	private static final int DIALOG_ACQUIRING = 2;
+	private static final int DIALOG_ERROR = 3;
 	
 	private static final int MESSAGE_SHOW_DIALOG = 1;
 	private static final int MESSAGE_HIDE_DIALOG = 2;
 	private static final int MESSAGE_SHOW_TOAST = 3;
-	
-	private static final String MESSAGE_TOAST_TEXT = "toast_text";
 	
 	private Location mLocation = null;
 	
@@ -58,8 +61,23 @@ public class IMOkActivity extends Activity {
 		public void onProviderEnabled(String provider) { }
 		public void onStatusChanged(String provider, int status, Bundle extras) { }
     };
-	
-    private String mToastText;
+    
+    private BroadcastReceiver mSentReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			if (intent.getAction().equals(BROADCAST_SMS)) {
+				dismissDialog(DIALOG_ACQUIRING);
+				
+				if (this.getResultCode() != Activity.RESULT_OK) {
+					Log.e(TAG, "Error sending SMS");
+					showDialog(DIALOG_ERROR);
+					return;
+				}
+				
+				Toast.makeText(IMOkActivity.this, "SMS Sent Successfully", Toast.LENGTH_LONG).show();
+			}
+		}
+    };
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -93,9 +111,22 @@ public class IMOkActivity extends Activity {
 
 	@Override
 	protected void onStop() {
-		mLocationManager.removeUpdates(mLocationListener);
-		
+		mLocationManager.removeUpdates(mLocationListener);	
 		super.onStop();
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction(BROADCAST_SMS);
+		registerReceiver(mSentReceiver, intentFilter);
+	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		unregisterReceiver(mSentReceiver);
 	}
 
 	@Override
@@ -145,7 +176,19 @@ public class IMOkActivity extends Activity {
 			progressDialog.setTitle("Sending status");
 			progressDialog.setMessage("Acquiring position and sending...");
 			return progressDialog;
+			
+		case DIALOG_ERROR:
+			return 
+				new AlertDialog.Builder(this)
+					.setTitle("Error!")
+					.setMessage("There was an error sending the SMS. Please try again.")
+					.setPositiveButton(R.string.imok_about_dialog_ok, 
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog, int whichButton) { }
+					})
+					.create();
 		}
+		
 		return null;
 	}
 	
@@ -201,15 +244,9 @@ public class IMOkActivity extends Activity {
 					formatter.format(mLocation.getLongitude()) + "]";
 			
 				SmsManager manager = SmsManager.getDefault();
-				manager.sendTextMessage(phoneNumber, null, messageStr, null, null);
-				
-				handler.sendEmptyMessage(MESSAGE_HIDE_DIALOG);
-				
-				Message message = new Message();
-				message.arg1 = Toast.LENGTH_LONG;
-				message.what = MESSAGE_SHOW_TOAST;
-				message.obj = (Object) "SMS message sent";
-				handler.sendMessage(message);
+				Intent intent = new Intent(BROADCAST_SMS);
+				PendingIntent sentIntent = PendingIntent.getBroadcast(IMOkActivity.this, 0, intent, 0);
+				manager.sendTextMessage(phoneNumber, null, messageStr, sentIntent, null);
 			}
 		});
 		locationThread.start();
