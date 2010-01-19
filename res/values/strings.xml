@@ -15,7 +15,21 @@
     <string name="settings_category_gateway">Gateway Settings</string>
     <string name="settings_gateway_phone_name">Gateway Phone Number</string>
     <string name="settings_gateway_phone_title">Gateway Phone Number</string>
-    <string name="settings_gateway_phone_summary">650-417-1034</string>
+    <string name="settings_gateway_phone_summary">650-691-5005</string>
+    
+    <string name="settings_gateway_verify_name">Verify Phone</string>
+    <string name="settings_gateway_verify_title">Verify Phone</string>
+    <string name="settings_gateway_unverified">Unverified</string>
+    <string name="settings_gateway_verified">Verified</string>
+    
+    <string name="settings_ensure_message_verified">You have already verified your phone number. Would you like to verify it again?</string>
+    <string name="settings_ensure_message_unverified">We are going to send an SMS to verify your phone number with the gateway. Is this OK?</string>
+    
+    <string name="settings_dialog_instruct_title">SMS Sent</string>
+    <string name="settings_dialog_instruct_message">Please login to the "I'm OK" website and check whether your phone number has been verified under your account.</string>
+    
+    <string name="settings_dialog_error_title">Error Sending SMS</string>
+    <string name="settings_dialog_error_message">There was an error sending the verification SMS. Please check the gateway number and try again.</string>
     
 	<string name="userkey_name">User Key</string>
 	<string name="userkey_text">Please go to http:/imok.jeztek.com and enter the user key provided:</string>
