@@ -160,21 +160,22 @@ public class IMOkActivity extends Activity {
 	protected Dialog onCreateDialog(int id) {
 		switch (id) {
 		case DIALOG_ABOUT:
-			return new AlertDialog.Builder(this)
-			.setTitle(getString(R.string.imok_about_dialog_title))
-			.setPositiveButton(R.string.imok_about_dialog_ok, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int whichButton) {
-				}
-			})
-			.setMessage(getString(R.string.imok_about_dialog_message))
-			.create();
+			return 
+				new AlertDialog.Builder(this)
+					.setTitle(getString(R.string.imok_about_dialog_title))
+					.setMessage(getString(R.string.imok_about_dialog_message))
+					.setPositiveButton(R.string.imok_about_dialog_ok, 
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int whichButton) { }
+					})
+					.create();
 			
 		case DIALOG_ACQUIRING:
 			ProgressDialog progressDialog = new ProgressDialog(this);
 			progressDialog.setCancelable(false);
 			progressDialog.setIndeterminate(true);
 			progressDialog.setTitle("Sending status");
-			progressDialog.setMessage("Acquiring position and sending...");
+			progressDialog.setMessage("Acquiring position and sending SMS...");
 			return progressDialog;
 			
 		case DIALOG_ERROR:
@@ -183,8 +184,8 @@ public class IMOkActivity extends Activity {
 					.setTitle("Error!")
 					.setMessage("There was an error sending the SMS. Please try again.")
 					.setPositiveButton(R.string.imok_about_dialog_ok, 
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog, int whichButton) { }
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int whichButton) { }
 					})
 					.create();
 		}
@@ -213,24 +214,15 @@ public class IMOkActivity extends Activity {
 	};
 	
 	private void reportImok() {
-		final SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 		final Handler handler = new Handler(mHandler);
-		
-		Thread locationThread = new Thread(new Runnable() {
+
+		final Thread locationThread = new Thread(new Runnable() {
 			public void run() {
 				handler.sendEmptyMessage(MESSAGE_SHOW_DIALOG);
 				
 				if (mHaveProvider == true) {
 					while(mLocation == null) { }
 				}
-				
-				
-				try {
-					Thread.sleep(2000);
-				} catch(InterruptedException e) {
-					Log.e(TAG, "Hi");
-				}
-				
 				
 				SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(IMOkActivity.this);
 				String phoneNumber = preferences.getString(
