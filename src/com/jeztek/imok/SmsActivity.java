@@ -1,5 +1,7 @@
 package com.jeztek.imok;
 
+import java.text.DecimalFormat;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -44,7 +46,11 @@ public class SmsActivity extends Activity {
 	private LocationManager mLocationManager;
     private LocationListener mLocationListener = new LocationListener() {
         public void onLocationChanged(Location location) {
-            SmsActivity.this.mLocation = location;            
+    		DecimalFormat formatter = new DecimalFormat("###.######");
+    		String messageStr = formatter.format(location.getLatitude()) +
+    			"," + 
+    			formatter.format(location.getLongitude());
+    		mLocationEdit.setText(messageStr);
         }
 
 		public void onProviderDisabled(String provider) { }
