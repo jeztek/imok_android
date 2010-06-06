@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent">
+
+<LinearLayout
+  android:orientation="vertical"
+  android:layout_width="fill_parent"
+  android:layout_height="wrap_content"
+  android:padding="10dip"
+  >
+  
+  <TextView
+  	android:id="@+id/sms_msg"
+  	android:text="@string/sms_ok_text"
+  	android:layout_width="fill_parent"
+  	android:layout_height="wrap_content"
+  	android:layout_marginBottom="15dip"
+  	/>
+  	
+ 
+  <TextView
+ 	android:id="@+id/sms_location_msg"
+ 	android:text="@string/sms_location_msg"
+ 	android:layout_width="fill_parent"
+ 	android:layout_height="wrap_content"
+ 	/>
+  <EditText
+  	android:id="@+id/sms_location_txt"
+  	android:lines="1"
+  	android:singleLine="true"
+  	android:layout_width="fill_parent"
+  	android:layout_height="wrap_content"
+  	android:layout_marginBottom="15dip"
+  	/>
+
+  <TextView
+ 	android:id="@+id/sms_free_msg"
+ 	android:text="@string/sms_free_msg"
+ 	android:layout_width="fill_parent"
+ 	android:layout_height="wrap_content"
+ 	/>
+  <EditText
+  	android:id="@+id/sms_free_txt"
+  	android:lines="1"
+  	android:singleLine="true"
+  	android:layout_width="fill_parent"
+  	android:layout_height="wrap_content"
+  	android:layout_marginBottom="10dip"
+  	/>
+  	
+  <TextView
+  	android:id="@+id/sms_remaining_msg"
+  	android:text="@string/sms_remaining"
+  	android:layout_width="fill_parent"
+  	android:layout_height="wrap_content"
+  	android:layout_marginBottom="10dip"
+  	/>
+  	
+  <Button
+  	android:id="@+id/sms_send_btn"
+  	android:text="Send"
+  	android:layout_width="fill_parent"
+  	android:layout_height="wrap_content"
+  	android:padding="5dip"
+    />
+  
+</LinearLayout>
+
+</ScrollView>

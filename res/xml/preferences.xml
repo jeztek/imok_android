@@ -14,14 +14,6 @@
   		android:phoneNumber="true"
   	/>
   	
-  	<Preference
-  		android:name="@string/settings_gateway_verify_name"
-  		android:title="@string/settings_gateway_verify_title"
-  		android:summary="@string/settings_gateway_unverified"
-  		android:defaultValue="false"
-  		android:key="settings_gateway_verified"
-  	/>
-  	
   </PreferenceCategory>
   
 </PreferenceScreen>

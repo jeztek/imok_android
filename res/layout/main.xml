@@ -1,22 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:padding="10dip"
     >
     
-<Button 
-	android:text="@string/imok_button"
-	android:drawableLeft="@drawable/smiley"
-	android:id="@+id/imok_button" 
-	android:layout_width="fill_parent" 
-	android:layout_height="wrap_content"
-	android:textStyle="bold"
-	android:padding="25dip"
-	android:paddingLeft="0dip"
-	android:paddingRight="50dip"
-	android:layout_marginBottom="10dip" 
-	/>
+	<LinearLayout 
+		android:id="@+id/main_top"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:padding="10dip"
+	    android:background="#777777"
+	    >
+    
+		<Button 
+			android:text="@string/imok_button"
+			android:textColor="#FFFFFFFF"
+			android:shadowColor="#FF000000"
+			android:shadowDy="-1"
+			android:shadowRadius="2"
+			android:drawableLeft="@drawable/smiley"
+			android:id="@+id/imok_button" 
+			android:layout_width="fill_parent" 
+			android:layout_height="wrap_content"
+			android:textStyle="bold"
+			android:textSize="30dip"
+			android:padding="25dip"
+			android:paddingLeft="0dip"
+			android:paddingRight="50dip"
+			android:background="@drawable/green_button"
+			/>
+	</LinearLayout>
+		
 
-</LinearLayout>
+	<LinearLayout 
+		android:id="@+id/main_bottom"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:padding="10dip"
+	    android:background="#777777"
+	    android:layout_alignParentBottom="true"
+	    >    			
+		<Button 
+			android:text="@string/imok_help_button"
+			android:drawableLeft="@drawable/sad"
+			android:textColor="#FFFFFFFF"
+			android:shadowColor="#FF000000"
+			android:shadowDy="-1"
+			android:shadowRadius="2"
+			android:id="@+id/imok_help_button" 
+			android:layout_width="fill_parent" 
+			android:layout_height="wrap_content"
+			android:textStyle="bold"
+			android:textSize="30dip"
+			android:padding="25dip"
+			android:paddingLeft="0dip"
+			android:paddingRight="50dip"
+			android:background="@drawable/red_button"
+			/>
+	</LinearLayout>
+
+	<LinearLayout
+		android:orientation="vertical" 
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:layout_below="@id/main_top"
+    	android:layout_above="@id/main_bottom" >
+
+	<ImageView
+    	android:layout_width="fill_parent" 
+		android:layout_height="1dip"
+		android:background="#FF2e3436"
+		/>
+		
+	<ImageView
+    	android:layout_width="fill_parent" 
+		android:layout_height="20dip"
+		android:background="@drawable/gradient"
+		/>
+
+	<TextView
+		android:id="@+id/imok_message"
+    	android:text="@string/imok_text"
+    	android:layout_width="fill_parent" 
+		android:layout_height="wrap_content"
+    	android:autoLink="web"
+    	android:padding="5dip"
+    	android:layout_weight="1"
+    	android:gravity="center_vertical|center_horizontal"/>
+
+	<ImageView
+    	android:layout_width="fill_parent" 
+		android:layout_height="20dip"
+		android:background="@drawable/reverse_gradient"
+		android:layout_gravity="bottom"
+		/>
+		
+	<ImageView
+    	android:layout_width="fill_parent" 
+		android:layout_height="1dip"
+		android:background="#FF555555"
+		android:layout_gravity="bottom"
+		/>
+
+    </LinearLayout>
+    		
+</RelativeLayout>

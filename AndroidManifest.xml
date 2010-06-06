@@ -20,6 +20,9 @@
 
         <activity android:name=".SettingsActivity"
                   android:label="@string/settings_name" />
+
+        <activity android:name=".SmsActivity"
+                  android:label="@string/sms_name" />
            
     </application>
     
